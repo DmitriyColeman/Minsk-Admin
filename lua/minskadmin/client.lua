@@ -2,9 +2,8 @@
     by Dmitriy Coleman AKA ZloyNomernoy (vk.com/c.zombie)
     License: MIT
 
-    Сука, я в рот ебал все эти ваши Derma дизайнеры
 ]]
-menubutton = KEY_F3
+menubutton = CreateClientConVar("madmin_key", KEY_F3, true, false, "Sets a minsk admin panel open key") or KEY_F3
 
 local function T(phrase, ...)
 	return string.format(Metrostroi.GetPhrase(phrase), ...)
@@ -150,7 +149,7 @@ end)
 
 hook.Add("PlayerButtonDown","MinskAdminMenuOpenRequest",function(ply,key)
 
-	if key == menubutton then
+	if key == menubutton:GetInt() then
 
         --if IsValid(menu) then menu:Remove() return end
 		if HasPermission("madm.menu") then

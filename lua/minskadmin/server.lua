@@ -19,7 +19,13 @@ minskadmin.gData = {}
 minskadmin.gData.lights = {}
 minskadmin.gData.feeders = {}
 
-minskadmin.versionID = 2
+--[[
+    1.0 - 1
+    1.1 - 2
+    1.1.1 - 3
+]]
+
+minskadmin.versionID = 3
 
 do 
     if not file.Exists("minskadmin","DATA") then

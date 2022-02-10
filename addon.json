@@ -1,0 +1,15 @@
+{
+	"title"		:	"Metrostroi Minsk 1989 admin",
+	"type"		:	"ServerContent",
+	"tags"		:	[ "fun", "build" ],
+	"ignore"	:
+	[
+		"addon.txt",
+		".editorconfig",
+		".git*",
+		"ulx.build",
+		"README.md",
+		"CHANGELOG.md",
+		"LICENSE.md"
+	]
+}

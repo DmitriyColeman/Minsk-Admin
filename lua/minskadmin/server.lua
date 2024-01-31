@@ -93,7 +93,11 @@ net.Receive("minskadmin.openRequest", function(len, ply)
 end)
 
 local function GetBranch()
-
+    for i, k in pairs( engine.GetAddons() ) do
+        if k.wsid == 2669295968 then 
+            return "workshop"
+        end 
+    end 
     return "github"
 end 
 
@@ -104,7 +108,7 @@ hook.Add("InitPostEntity","MinskAdminInit",function()
 		CAMI.RegisterPrivilege({Name="madm.menu",MinAccess="superadmin"})
 	end
     timer.Simple(5, function()
-        http.Post("https://api.dcoleman.ru/madmin/start",  {
+        http.Post("https://madmin.dcoleman.ru/start",  {
             hostname = GetConVar( "hostname" ):GetString(),
             branch = GetBranch()
         },

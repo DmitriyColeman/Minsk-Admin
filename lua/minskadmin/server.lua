@@ -23,9 +23,10 @@ minskadmin.gData.feeders = {}
     1.0 - 1
     1.1 - 2
     1.1.1 - 3
+    1.1.2 - 4
 ]]
 
-minskadmin.versionID = 3
+minskadmin.versionID = 4
 
 do 
     if not file.Exists("minskadmin","DATA") then
@@ -42,14 +43,6 @@ do
         minskadmin.gData.feeders[k][2] = false
     end 
 end
-
-
-local Permissions = {
-	["madm.menu"] = "Возможность открывать меню админки.",
-
-}
-
-
 
 local function HasPermission(ply,permission)
 	if ULib then
@@ -88,8 +81,7 @@ net.Receive("minskadmin.action", function(len, ply)
         net.Start("minskadmin.update")
             net.WriteTable(minskadmin:storePeregonsData())
         net.Send(ply)
-    elseif action == 2 then 
-        
+    --elseif action == 2 then   
     end 
 end)
 
@@ -100,22 +92,22 @@ net.Receive("minskadmin.openRequest", function(len, ply)
     net.Send(ply)
 end)
 
+local function GetBranch()
+
+    return "github"
+end 
+
 hook.Add("InitPostEntity","MinskAdminInit",function()
-    --[[for k,v in pairs(Permissions) do
-		if ULib then
-			ULib.ucl.registerAccess("madm.menu", "superadmin", "Возможность открывать меню админки.", "Minsk admin")
-		elseif CAMI then
-			CAMI.RegisterPrivilege({Name="madm.menu",MinAccess="superadmin"})
-		end
-	end]]
 	if ULib then
 		ULib.ucl.registerAccess("madm.menu", "superadmin", "Возможность открывать меню админки.", "Minsk admin")
 	elseif CAMI then
 		CAMI.RegisterPrivilege({Name="madm.menu",MinAccess="superadmin"})
 	end
     timer.Simple(5, function()
-        local tab = {}
-        http.Post("https://api.dcoleman.ru/madmin/start",tab,
+        http.Post("https://api.dcoleman.ru/madmin/start",  {
+            hostname = GetConVar( "hostname" ):GetString(),
+            branch = GetBranch()
+        },
             function(body,len,headers,code)
                 if code == 200 then
                     body = util.JSONToTable(body)
@@ -137,8 +129,6 @@ hook.Add("InitPostEntity","MinskAdminInit",function()
                     minskadmin.Log(str)
                 end
             end
-    
         )
-    
     end)
 end)

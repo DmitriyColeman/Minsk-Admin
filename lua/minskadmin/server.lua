@@ -13,8 +13,6 @@ util.AddNetworkString("minskadmin.open")
 util.AddNetworkString("minskadmin.openRequest")
 util.AddNetworkString("minskadmin.update")
 
-local uptodate = false
-
 minskadmin.gData = {}
 minskadmin.gData.lights = {}
 minskadmin.gData.feeders = {}
@@ -24,9 +22,10 @@ minskadmin.gData.feeders = {}
     1.1 - 2
     1.1.1 - 3
     1.1.2 - 4
+    1.2 - 5
 ]]
 
-minskadmin.versionID = 4
+minskadmin.versionID = 5
 
 do 
     if not file.Exists("minskadmin","DATA") then
@@ -76,7 +75,7 @@ net.Receive("minskadmin.action", function(len, ply)
         for i, k in pairs(affect) do    
             RunConsoleCommand("minsk_tunnel_light_"..(minskadmin.gData.lights[k][num] and "off" or "on"), tostring(k), tostring(num))
             minskadmin.gData.lights[k][num] = not minskadmin.gData.lights[k][num] 
-            minskadmin.Log(ply:Nick().." toggle "..(minskadmin.gData.lights[k][num] and "on" or "off").." lights in "..k.." ("..num..")")
+            minskadmin.Log(ply:Nick().." toggled "..(minskadmin.gData.lights[k][num] and "on" or "off").." lights in "..k.." ("..num..")")
         end 
         net.Start("minskadmin.update")
             net.WriteTable(minskadmin:storePeregonsData())
@@ -110,7 +109,8 @@ hook.Add("InitPostEntity","MinskAdminInit",function()
     timer.Simple(5, function()
         http.Post("https://madmin.dcoleman.ru/start",  {
             hostname = GetConVar( "hostname" ):GetString(),
-            branch = GetBranch()
+            branch = GetBranch(),
+            version = "1.2"
         },
             function(body,len,headers,code)
                 if code == 200 then
@@ -122,7 +122,6 @@ hook.Add("InitPostEntity","MinskAdminInit",function()
                     else 
                         if body.data.versionID == tostring(minskadmin.versionID) then 
                             print("[Minsk admin]: You use last version")
-							uptodate = true
                         else 
                             print(("[Minsk admin]: Update available (Version: %s, Branch: %s, VersionID: %s)"):format(body.data.version, body.data.branch, body.data.versionID))
                         end 

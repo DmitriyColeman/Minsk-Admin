@@ -1,8 +1,8 @@
 --[[
     by Dmitriy Coleman AKA ZloyNomernoy (vk.com/c.zombie)
     License: MIT
-
 ]]
+
 menubutton = CreateClientConVar("madmin_key", KEY_F3, true, false, "Sets a minsk admin panel open key") or KEY_F3
 
 local function T(phrase, ...)
@@ -91,46 +91,6 @@ local function ShowMenu(data, forceOpen)
         e:SetPos( 0.74959871589085 * w, 0.078260869565217 * t )
         e:SetSize( 0.18459069020867 * w, 0.057971014492754 * t )
         e:SetText(T("minskadmin.lighting"))
-
-        --[[local e = vgui.Create( "DLabel", menu )
-        e:SetPos( 0.74959871589085 * w, 0.3304347826087 * t )
-        e:SetSize( 0.18459069020867 * w, 0.057971014492754 * t )
-        e:SetText("Фидеры")
-
-        local fider1 = vgui.Create( "DButton", menu )
-        fider1:SetPos( 0.74959871589085 * w, 0.4231884057971 * t )
-        fider1:SetSize( 0.21669341894061 * w, 0.063768115942029 * t )
-        fider1:SetText("Фидеры по 1 пути")
-
-        local fider2 = vgui.Create( "DButton", menu )
-        fider2:SetPos( 0.74959871589085 * w, 0.51304347826087 * t )
-        fider2:SetSize( 0.21669341894061 * w, 0.063768115942029 * t )
-        fider2:SetText("Фидеры по 2 пути")
-        
-        fider1.DoClick = function()
-            local sel = tr:GetSelected()
-            local out = {}
-            for i, k in pairs(sel) do 
-                table.insert(out, k.name)
-            end  
-            net.Start("minskadmin.action")
-				net.WriteInt(2,5)
-                net.WriteInt(1,5)
-				net.WriteTable(out)
-			net.SendToServer()
-        end 
-        fider2.DoClick = function()
-            local sel = tr:GetSelected()
-            local out = {}
-            for i, k in pairs(sel) do 
-                table.insert(out, k.name)
-            end  
-            net.Start("minskadmin.action")
-				net.WriteInt(2,5)
-                net.WriteInt(2,5)
-				net.WriteTable(out)
-			net.SendToServer()
-        end ]]
     else 
         menu:Remove()
     end 
@@ -138,7 +98,7 @@ end
 
 net.Receive("minskadmin.open", function()
 	local data = net.ReadTable()
-    if IsValid(menu) then menu:Remove() return end
+    if IsValid(menu) then menu:Remove() end
     ShowMenu(data, false)
 end)
 
@@ -148,10 +108,7 @@ net.Receive("minskadmin.update", function()
 end)
 
 hook.Add("PlayerButtonDown","MinskAdminMenuOpenRequest",function(ply,key)
-
 	if key == menubutton:GetInt() then
-
-        --if IsValid(menu) then menu:Remove() return end
 		if HasPermission("madm.menu") then
 			net.Start("minskadmin.openRequest")
 			net.SendToServer()
@@ -159,4 +116,17 @@ hook.Add("PlayerButtonDown","MinskAdminMenuOpenRequest",function(ply,key)
 	end
 end)
 
-return true
+hook.Add("PopulateToolMenu", "MinskAdmin_cpanel", function()
+    spawnmenu.AddToolMenuOption( "Utilities", "Metrostroi", "minsk_admin_client_panel", "Minsk Admin client", "", "", function( panel )
+        local t = vgui.Create( "DLabel", panel )
+        t:SetPos( 10, 55 )
+        t:SetText( T( "minskadmin.keybind" ) )
+        t:SetTextColor( Color( 0, 0, 0, 255 ) )
+        t:SetSize( 200, 20 )
+
+        local binder = vgui.Create( "DBinder", panel )
+        binder:SetPos( 200, 55 )
+        binder:SetSize( 60, 20 )
+        binder:SetConVar("madmin_key")
+    end )
+end)

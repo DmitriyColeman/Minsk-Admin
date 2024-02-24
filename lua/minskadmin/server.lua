@@ -93,7 +93,7 @@ end)
 
 local function GetBranch()
     for i, k in pairs( engine.GetAddons() ) do
-        if k.wsid == 2669295968 then 
+        if k.wsid == "2669295968" then 
             return "workshop"
         end 
     end 
